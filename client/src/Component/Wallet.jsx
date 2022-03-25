@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styles from "../Styles/Wallet.module.css";
 import { useDispatch, useSelector } from "react-redux";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Onboard from "bnc-onboard";
 import WEB3 from "web3";
 import { BsWallet2 } from 'react-icons/bs';
@@ -10,7 +10,7 @@ import { IoWalletOutline } from 'react-icons/io5';
 import { GoLinkExternal } from 'react-icons/go';
 import { FaUserCircle } from 'react-icons/fa';
 import { AiFillCaretUp } from 'react-icons/ai';
-import { setIsAuth } from "../Redux/app/actions"
+import { setIsAuth, setWallet, setWalletModal } from "../Redux/app/actions"
 
 const Wallet = () => {
     const dispatch = useDispatch();
@@ -19,10 +19,10 @@ const Wallet = () => {
     let web3;
 
     const {
-        isAuth
+        isAuth,
+        wallet,
+        walletModal
     } = useSelector(state => state.app)
-
-    const [modalState, setModalState] = useState(false);
 
     const onboard = Onboard({
         dappId: process.env.REACT_APP_ONBOARD_KEY,
@@ -31,7 +31,6 @@ const Wallet = () => {
         subscriptions: {
             wallet: wallet => {
                 web3 = new WEB3(wallet.provider);
-                console.log(`${wallet.name} is now connected`);
             }
         },
         walletSelect: {
@@ -71,29 +70,30 @@ const Wallet = () => {
     })
 
     const connectWallet = async () => {
-        await setModalState(false)
-        await onboard.walletSelect();
+        await dispatch(setWalletModal(false))
+        await onboard.walletSelect()
         await onboard.walletCheck()
-        getWalletData()
+
         let auth = await check()
+        let currentState = getWalletData()
+   
+        dispatch(setWallet(currentState))
         dispatch(setIsAuth(auth))
     }
 
     const check = async () => {
         try {
             const readyToTransact = await onboard.walletCheck()
-            if(readyToTransact === true){
-                console.log(readyToTransact)
+            if (readyToTransact === true) {
                 return true
             }
         } catch {
-            console.log(false);
             return false
         }
     }
 
     const disconnectWallet = async () => {
-        await setModalState(false)
+        dispatch(setWalletModal(false))
         await onboard.walletReset()
         let auth = await check()
         dispatch(setIsAuth(auth))
@@ -101,27 +101,36 @@ const Wallet = () => {
 
     const getWalletData = () => {
         const currentState = onboard.getState()
-        console.log(currentState);
-        // {
-        //    address: string
-        //    network: number
-        //    balance: string
-        //    wallet: Wallet
-        //    mobileDevice: boolean
-        //    appNetworkId: number
-        // }
+        return currentState
     }
 
-    const handleWalletConnect = () => {
-        console.log("handle wallet");
-        console.log("modal", modalState);
-        console.log("isAuth", isAuth);
-        setModalState(!modalState)
+    const handleWalletConnect = async () => {
+        dispatch(setWalletModal(!walletModal))
+    }
+
+    const networkObj = {
+        1: "MainNet",
+        42: "Kovan",
+        3: "Ropsten",
+        4: "Rinkeby"
+    }
+
+    const addressString = () => {
+        let adr = wallet.address.split("")
+        let start = adr.slice(0, 3).join("")
+        let end = adr.slice(-4).join("")
+        let string = `${start}...${end}`
+        return string;
     }
 
     return (
-        <div className={styles.wrapper}>
-            <label className={styles.walletWrapper} onClick={() => handleWalletConnect()}>
+        <div className={styles.wrapper} >
+            <label
+                className={styles.walletWrapper}
+                onClick={
+                    () => handleWalletConnect()
+                }
+            >
                 <BsWallet2 className={styles.walletIcon} />
                 <div className={isAuth === true ? styles.walletBadgeGreen : styles.walletBadge} />
             </label>
@@ -138,42 +147,41 @@ const Wallet = () => {
                     </label>
             }
             <AiFillCaretUp
-                style={{visibility: modalState === false && "hidden"}}
+                style={{ visibility: walletModal === false && "hidden" }}
                 className={styles.caretIcon}
-                onClick={() => setModalState(false)} 
-                />
-
-            {/* <button onClick={login}>Login</button>
-            <button onClick={check}>Check</button>
-            <button onClick={reset}>Reset</button> */}
+            onClick={() => dispatch(setWalletModal(false))} 
+            />
             {
-                modalState === true && isAuth === true &&
-                <div className={styles.walletModal}>
-                    <FaUserCircle className={styles.walletUser} />
-                    <div className={styles.walletAddressDiv}>
-                        <p className={styles.walletModalText}>ETH: 0x90f9...sd8f</p>
-                        <BiCopy className={styles.walletModalIcon} />
-                        <GoLinkExternal className={styles.walletModalIcon} />
-                    </div>
-                    <div className={styles.walletDataDiv}>
-                        <p className={styles.walletModalText}>Wallet</p>
-                        <label className={styles.walletName}>
-                            <IoWalletOutline className={styles.walletModalIcon} style={{ cursor: "auto", margin: 0 }} />
-                            <p className={styles.walletModalText}>MetaMask</p>
-                        </label>
-                    </div>
-                    <div className={styles.walletDataDiv}>
-                        <p className={styles.walletModalText}>Network</p>
-                        <p className={styles.walletModalText}>Rinkeby</p>
-                    </div>
-                    <label className={styles.walletDisconnectButton} onClick={() => disconnectWallet()}>Disconnect</label>
-                </div>
+                walletModal === true && isAuth === true ?
+                    <div className={styles.walletModal}>
+                        <FaUserCircle className={styles.walletUser} />
+                        <div className={styles.walletAddressDiv}>
+                            <p className={styles.walletModalText}>ETH: {addressString()}</p>
+                            <BiCopy className={styles.walletModalIcon} onClick={() =>  navigator.clipboard.writeText(wallet.address)}/>
+                            <GoLinkExternal className={styles.walletModalIcon} onClick={() => window.open(`https://rinkeby.etherscan.io/address/${wallet.address}`, '_blank')}/>
+                        </div>
+                        <div className={styles.walletDataDiv}>
+                            <p className={styles.walletModalText}>Wallet</p>
+                            <label className={styles.walletName}>
+                                <IoWalletOutline className={styles.walletModalIcon} style={{ cursor: "auto", margin: 0 }} />
+                                <p className={styles.walletModalText}>{wallet.wallet.name}</p>
+                            </label>
+                        </div>
+                        <div className={styles.walletDataDiv}>
+                            <p className={styles.walletModalText}>Network</p>
+                            <p className={styles.walletModalText}>{networkObj[wallet.network]}</p>
+                        </div>
+                        <div className={styles.walletButtonDiv}>
+                            <label className={styles.walletSwitchButton} onClick={() => connectWallet()}>Change</label>
+                            <label className={styles.walletDisconnectButton} onClick={() => disconnectWallet()}>Disconnect</label>
+                        </div>
+                    </div> : null
             }
             {
-                modalState === true && isAuth === false &&
-                <div className={styles.walletModal}>
-                    <label className={styles.walletConnectButton} onClick={() => connectWallet()}>Connect</label>
-                </div>
+                walletModal === true && isAuth === false ?
+                    <div className={styles.walletModal}>
+                        <label className={styles.walletConnectButton} onClick={() => connectWallet()}>Connect</label>
+                    </div> : null
             }
         </div>
     );
