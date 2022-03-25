@@ -3,9 +3,9 @@ import styles from '../Styles/Header.module.css'
 import { Link, useLocation } from "react-router-dom";
 import { useNavigate } from 'react-router';
 import { MdOutlineDashboard } from 'react-icons/md';
-import { BiWallet } from 'react-icons/bi';
 import { BsQuestionCircle, BsGithub } from 'react-icons/bs';
 import { AiOutlineHome } from 'react-icons/ai';
+import { Wallet } from './Wallet';
 
 const Header = () => {
     const location = useLocation();
@@ -25,7 +25,8 @@ const Header = () => {
                     <label className={path === "/contact-me" ? styles.activeLink : styles.pageLink} onClick={() => handleRoute("contact-me")} >Contact</label>
                 </div>
             </div>
-            <label className={styles.pageLink} onClick={() => handleRoute("dashboard")}></label>
+            
+            <Wallet />
 
 
             <div className={styles.bottomWrapper}>

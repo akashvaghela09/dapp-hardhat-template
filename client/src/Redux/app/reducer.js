@@ -1,16 +1,20 @@
-import { 
+import {
     SET_LOADING,
     SET_ERROR,
-    SET_CONTRACT_INSTANCE
+    SET_CONTRACT_INSTANCE,
+    SET_WALLET,
+    SET_IS_AUTH
 } from './actionTypes';
 
 const initialState = {
     isLoading: false,
     isError: false,
-    contract: {}
+    contract: {},
+    wallet: {},
+    isAuth: false
 }
 
-const reducer = (state = initialState, {type, payload}) => {
+const reducer = (state = initialState, { type, payload }) => {
 
     switch (type) {
         case SET_LOADING:
@@ -28,9 +32,19 @@ const reducer = (state = initialState, {type, payload}) => {
                 ...state,
                 contract: payload
             }
+        case SET_WALLET:
+            return {
+                ...state,
+                wallet: payload
+            }
+        case SET_IS_AUTH:
+            return {
+                ...state,
+                isAuth: payload
+            }
         default:
             return state
     }
 }
 
-export {reducer}
+export { reducer }

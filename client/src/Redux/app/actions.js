@@ -1,7 +1,9 @@
 import { 
     SET_LOADING,
     SET_ERROR, 
-    SET_CONTRACT_INSTANCE
+    SET_CONTRACT_INSTANCE,
+    SET_WALLET,
+    SET_IS_AUTH
 } from './actionTypes';
 
 const setLoading = (payload) => {
@@ -24,8 +26,24 @@ const setContractInstance = (payload) => {
         payload
     }
 }
+
+const setWallet = (payload) => {
+    return {
+        type: SET_WALLET,
+        payload
+    }
+}
+
+const setIsAuth = (payload) => {
+    return {
+        type: SET_IS_AUTH,
+        payload
+    }
+}
 export { 
     setLoading,
     setError,
-    setContractInstance
+    setContractInstance,
+    setWallet,
+    setIsAuth
 }

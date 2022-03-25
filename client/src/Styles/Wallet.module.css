@@ -1,12 +1,160 @@
 .wrapper {
     background: #1a1a1a;
-    min-height: calc(100vh - 60px);
+    height: auto;
     color: rgb(0, 0, 0);
     overflow: auto;
-    border: 1px solid red;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0px 10px;
+    user-select: none;
 }
 
-@media screen and (max-width: 600px) {
-    
-    
+.walletWrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    padding: 5px;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+.walletIcon {
+    color: rgb(224, 224, 224);
+    font-size: 35px;
+    cursor: pointer;
+}
+
+.walletBadge, .walletBadgeGreen {
+    border: 3px solid rgb(224, 224, 224);
+    width: 0px;
+    height: 0px;
+    padding: 5px;
+    border-radius: 50%;
+    position: absolute;
+    bottom: 3px;
+    right: 0px;
+    background-color: gray;
+    cursor: pointer;
+}
+
+.walletBadgeGreen {
+    background-color: green;
+}
+
+.walletText1, .walletText2 {
+    color: rgb(224, 224, 224);
+}
+
+.walletText1 {
+    font-weight: bold;
+    font-size: 17px;
+}
+
+.walletText2 {
+    font-size: 12px;
+    margin: 3px 0px;
+}
+
+.walletStatus {
+    cursor: pointer;
+}
+
+.caretIcon {
+    margin-left: 10px;
+    font-size: 30px;
+    cursor: pointer;
+}
+
+.walletModal {
+    width: 230px;
+    height: fit-content;
+    border: 1px solid #272727;
+    position: absolute;
+    right: 5px;
+    top: 65px;
+    border-radius: 8px;
+    background-color: #1a1a1a;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: rgb(224, 224, 224);
+    user-select: none;
+}
+
+.walletUser {
+    font-size: 60px;
+    margin: 20px;
+}
+
+.walletClose:hover {
+    color: white;
+}
+
+.walletAddressDiv {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 15px;
+}
+
+.walletModalText {
+    margin: 5px 10px;
+}
+
+.walletDataDiv {
+    display: flex;
+    border: 1px solid #272727;
+    width: 100%;
+    justify-content: space-between;
+
+}
+
+.walletName {
+    display: flex;
+    align-items: center;
+}
+
+.walletModalIcon {
+    font-size: 20px;
+    margin: 2px;
+    cursor: pointer;
+}
+
+.walletDisconnectButton, .walletConnectButton {
+    margin: 15px;
+    width: 60%;
+    background-color: red;
+    padding: 15px 20px;
+    text-align: center;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.walletDisconnectButton:active, .walletConnectButton:active {
+    transform: translateY(2px);
+    background-color: rgb(190, 0, 0);
+    user-select: none;
+}
+
+.walletConnectButton {
+    background-color: green;
+}
+
+.walletConnectButton:active {
+    background-color: rgb(0, 97, 0);
+}
+
+@media screen and (max-width: 700px) {
+    .walletStatus {
+        display:  none;
+    }
+
+    .caretIcon {
+        margin: auto;
+        display: none;
+    }
 }
