@@ -3,6 +3,7 @@ import {
     SET_ERROR,
     SET_CONTRACT_INSTANCE,
     SET_WALLET,
+    SET_WALLET_MODAL,
     SET_IS_AUTH
 } from './actionTypes';
 
@@ -11,6 +12,7 @@ const initialState = {
     isError: false,
     contract: {},
     wallet: {},
+    walletModal: false,
     isAuth: false
 }
 
@@ -36,6 +38,11 @@ const reducer = (state = initialState, { type, payload }) => {
             return {
                 ...state,
                 wallet: payload
+            }
+        case SET_WALLET_MODAL:
+            return {
+                ...state,
+                walletModal: payload
             }
         case SET_IS_AUTH:
             return {
