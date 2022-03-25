@@ -1,18 +1,16 @@
 import React, { useState, useEffect } from "react";
 import styles from "../Styles/Wallet.module.css";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import Onboard from "bnc-onboard";
 import WEB3 from "web3";
-import { BsWallet2, BsFillCaretUpFill } from 'react-icons/bs';
-import { Spinner } from "./Spinner";
+import { BsWallet2 } from 'react-icons/bs';
 import { BiCopy } from 'react-icons/bi';
 import { IoWalletOutline } from 'react-icons/io5';
 import { GoLinkExternal } from 'react-icons/go';
 import { FaUserCircle } from 'react-icons/fa';
-import { MdClose } from 'react-icons/md';
 import { AiFillCaretUp } from 'react-icons/ai';
-
+import { setIsAuth } from "../Redux/app/actions"
 
 const Wallet = () => {
     const dispatch = useDispatch();
@@ -72,27 +70,38 @@ const Wallet = () => {
         }
     })
 
-    const login = async () => {
+    const connectWallet = async () => {
+        await setModalState(false)
         await onboard.walletSelect();
         await onboard.walletCheck()
+        getWalletData()
+        let auth = await check()
+        dispatch(setIsAuth(auth))
     }
 
     const check = async () => {
         try {
             const readyToTransact = await onboard.walletCheck()
-            console.log(readyToTransact)
+            if(readyToTransact === true){
+                console.log(readyToTransact)
+                return true
+            }
         } catch {
             console.log(false);
             return false
         }
     }
 
-    const reset = async () => {
+    const disconnectWallet = async () => {
+        await setModalState(false)
         await onboard.walletReset()
+        let auth = await check()
+        dispatch(setIsAuth(auth))
     }
 
     const getWalletData = () => {
         const currentState = onboard.getState()
+        console.log(currentState);
         // {
         //    address: string
         //    network: number
@@ -104,7 +113,9 @@ const Wallet = () => {
     }
 
     const handleWalletConnect = () => {
-        console.log("trying to connect wallet");
+        console.log("handle wallet");
+        console.log("modal", modalState);
+        console.log("isAuth", isAuth);
         setModalState(!modalState)
     }
 
@@ -135,7 +146,6 @@ const Wallet = () => {
             {/* <button onClick={login}>Login</button>
             <button onClick={check}>Check</button>
             <button onClick={reset}>Reset</button> */}
-            <Spinner />
             {
                 modalState === true && isAuth === true &&
                 <div className={styles.walletModal}>
@@ -156,13 +166,13 @@ const Wallet = () => {
                         <p className={styles.walletModalText}>Network</p>
                         <p className={styles.walletModalText}>Rinkeby</p>
                     </div>
-                    <label className={styles.walletDisconnectButton}>Disconnect</label>
+                    <label className={styles.walletDisconnectButton} onClick={() => disconnectWallet()}>Disconnect</label>
                 </div>
             }
             {
                 modalState === true && isAuth === false &&
                 <div className={styles.walletModal}>
-                    <label className={styles.walletConnectButton}>Connect</label>
+                    <label className={styles.walletConnectButton} onClick={() => connectWallet()}>Connect</label>
                 </div>
             }
         </div>
