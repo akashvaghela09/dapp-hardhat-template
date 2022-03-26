@@ -2,7 +2,10 @@
 
 ## Setup Backend
 - **cd backend**
-- **npm install**
+- Install dependencies with **npm install**
+```
+npm install
+```
 - Add contract in contract folder (Note: Solidity version should be ^0.8.4)
 - Add values to **.env** file
 - Add .env to **.gitignore** file
@@ -31,10 +34,10 @@ npm install
 REACT_APP_CONTRACT_ADDRESS=
 ```
 - Add .env to **.gitignore** file
-- Copy the **abi** value from a json file located in 
-</br>
-*backend/artifacts/contract/contract-name.sol/contract-name.json*
+- Copy the **abi** value from a json file located in _backend/artifacts/contract/contract-name.sol/contract-name.json_ 
+
 - Add that **abi** value to **helper.js** file
+
 - run **npm start** in terminal and Open [http://localhost:3000](http://localhost:3000)
 
 ```
