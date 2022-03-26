@@ -8,13 +8,15 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Header } from './Component/Header';
 import { Spinner } from "./Component/Spinner";
 import { Error } from './Component/Error';
+import { Alert } from './Component/Alert';
 
 function App() {
   const dispatch = useDispatch();
 
   const {
     isError,
-    isLoading
+    isLoading,
+    isAlert
 } = useSelector(state => state.app)
 
   return (
@@ -27,6 +29,9 @@ function App() {
       }
       {
         isError === true && <Error />
+      }
+      {
+        isAlert.status === true && <Alert />
       }
     </div>
   );

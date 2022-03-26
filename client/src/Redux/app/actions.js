@@ -1,6 +1,7 @@
 import { 
     SET_LOADING,
     SET_ERROR, 
+    SET_ALERT, 
     SET_CONTRACT_INSTANCE,
     SET_WALLET,
     SET_WALLET_MODAL,
@@ -17,6 +18,13 @@ const setLoading = (payload) => {
 const setError = (payload) => {
     return {
         type: SET_ERROR,
+        payload
+    }
+}
+
+const setAlert = (payload) => {
+    return {
+        type: SET_ALERT,
         payload
     }
 }
@@ -52,6 +60,7 @@ const setIsAuth = (payload) => {
 export { 
     setLoading,
     setError,
+    setAlert,
     setContractInstance,
     setWallet,
     setWalletModal,

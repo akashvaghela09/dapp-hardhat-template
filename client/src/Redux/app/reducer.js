@@ -1,6 +1,7 @@
 import {
     SET_LOADING,
     SET_ERROR,
+    SET_ALERT,
     SET_CONTRACT_INSTANCE,
     SET_WALLET,
     SET_WALLET_MODAL,
@@ -10,6 +11,7 @@ import {
 const initialState = {
     isLoading: false,
     isError: false,
+    isAlert: { status: false, msg: "" },
     contract: {},
     wallet: {},
     walletModal: false,
@@ -28,6 +30,11 @@ const reducer = (state = initialState, { type, payload }) => {
             return {
                 ...state,
                 isError: payload
+            }
+        case SET_ALERT:
+            return {
+                ...state,
+                isAlert: payload
             }
         case SET_CONTRACT_INSTANCE:
             return {

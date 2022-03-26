@@ -9,7 +9,7 @@ import { SiHiveBlockchain } from 'react-icons/si';
 import { FaUserCircle, FaEthereum } from 'react-icons/fa';
 import { AiFillCaretUp } from 'react-icons/ai';
 import { MdAccountBalanceWallet, MdOutlineAccountBalanceWallet } from 'react-icons/md';
-import { setContractInstance, setIsAuth, setWallet, setWalletModal } from "../Redux/app/actions"
+import { setAlert, setContractInstance, setIsAuth, setWallet, setWalletModal } from "../Redux/app/actions"
 import { ethers } from "ethers";
 import { abi } from "../helper";
 
@@ -56,11 +56,14 @@ const Wallet = () => {
 
     const handleWalletConnect = async () => {
         if (window.ethereum !== undefined && await metamask.isUnlocked() === false) {
-            alert("MetaMask is Locked!!")
+            let alertObj = {status: true, msg: "MetaMask is Locked!!"}
+            dispatch(setAlert(alertObj))
         } else if (window.ethereum !== undefined){
             dispatch(setWalletModal(!walletModal))
         } else {
-            alert("install metamask extension!!")
+            let alertObj = {status: true, msg: "Metamask Not Found!!"}
+            dispatch(setAlert(alertObj))
+
         }
     }
 
