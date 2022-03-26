@@ -5,9 +5,10 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { BiCopy } from 'react-icons/bi';
 import { IoWalletOutline, IoWallet } from 'react-icons/io5';
 import { GoLinkExternal } from 'react-icons/go';
-import { FaUserCircle } from 'react-icons/fa';
+import { SiHiveBlockchain } from 'react-icons/si';
+import { FaUserCircle, FaEthereum } from 'react-icons/fa';
 import { AiFillCaretUp } from 'react-icons/ai';
-import { MdAccountBalanceWallet,  MdOutlineAccountBalanceWallet} from 'react-icons/md';
+import { MdAccountBalanceWallet, MdOutlineAccountBalanceWallet } from 'react-icons/md';
 import { setIsAuth, setWallet, setWalletModal } from "../Redux/app/actions"
 import { ethers } from "ethers";
 import { abi } from "../helper";
@@ -50,7 +51,7 @@ const Wallet = () => {
         }
     }
 
-    
+
 
     // const check = async () => {
     //     console.log("check called");
@@ -72,7 +73,7 @@ const Wallet = () => {
     //     const name2 = await contractObj.getName()
     //     console.log(name2);
     // }
-    
+
     const metamask = {
         requestAccounts: async () => {
             let accountArr = window.ethereum.request({ method: 'eth_requestAccounts' })
@@ -104,9 +105,9 @@ const Wallet = () => {
         "0x42": "Kovan"
     }
 
-    const addressString = () => {
-        let adr = wallet.accounts[0].split("")
-        let start = adr.slice(0, 3).join("")
+    const concatString = (para) => {
+        let adr = para.split("")
+        let start = adr.slice(0, 4).join("")
         let end = adr.slice(-4).join("")
         let string = `${start}...${end}`
         return string;
@@ -145,21 +146,38 @@ const Wallet = () => {
                     <div className={styles.walletModal}>
                         <FaUserCircle className={styles.walletUser} />
                         <div className={styles.walletAddressDiv}>
-                            <p className={styles.walletModalText}>ETH: {addressString()}</p>
-                            <BiCopy className={styles.walletModalIcon} onClick={() =>  navigator.clipboard.writeText(wallet.accounts[0])}/>
-                            <GoLinkExternal className={styles.walletModalIcon} onClick={() => window.open(`https://rinkeby.etherscan.io/address/${wallet.accounts[0]}`, '_blank')}/>
+                            <p className={styles.walletModalText}><b>ETH: {concatString(wallet.accounts[0])}</b></p>
+                            <BiCopy className={styles.walletModalIconClickable} onClick={() => navigator.clipboard.writeText(wallet.accounts[0])} />
+                            <GoLinkExternal className={styles.walletModalIconClickable} onClick={() => window.open(`https://rinkeby.etherscan.io/address/${wallet.accounts[0]}`, '_blank')} />
                         </div>
                         <div className={styles.walletDataDiv}>
-                            <p className={styles.walletModalText}>Wallet</p>
-                            <label className={styles.walletName}>
-                                <IoWalletOutline className={styles.walletModalIcon} style={{ cursor: "auto", margin: 0 }} />
-                                <p className={styles.walletModalText}>{wallet.name}</p>
-                            </label>
+                            <div className={styles.walletDataType}>
+                                <label className={styles.iconWrapper}>
+                                    <FaEthereum className={styles.walletModalIcon} style={{ cursor: "auto", margin: 0 }} />
+                                </label>
+                                <p className={styles.walletModalText}>Balance</p>
+                            </div>
+                            <p className={styles.walletModalText}>{concatString(wallet.balance)}</p>
                         </div>
                         <div className={styles.walletDataDiv}>
-                            <p className={styles.walletModalText}>Network</p>
+                            <div className={styles.walletDataType}>
+                                <label className={styles.iconWrapper}>
+                                    <IoWalletOutline className={styles.walletModalIcon} style={{ cursor: "auto", margin: 0, marginLeft: -5 }} />
+                                </label>
+                                <p className={styles.walletModalText}>Wallet</p>
+                            </div>
+                            <p className={styles.walletModalText}>{wallet.name}</p>
+                        </div>
+                        <div className={styles.walletDataDiv}>
+                            <div className={styles.walletDataType}>
+                                <label className={styles.iconWrapper}>
+                                    <SiHiveBlockchain className={styles.walletModalIcon} style={{ cursor: "auto", margin: 0, marginLeft: 11 }} />
+                                </label>
+                                <p className={styles.walletModalText}>Network</p>
+                            </div>
                             <p className={styles.walletModalText}>{networkObj[wallet.network]}</p>
                         </div>
+
                         <div className={styles.walletButtonDiv}>
                             <label className={styles.walletSwitchButton} onClick={() => connectWallet()}>Change</label>
                             <label className={styles.walletDisconnectButton} onClick={() => disconnectWallet()}>Disconnect</label>

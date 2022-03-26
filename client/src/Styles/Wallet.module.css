@@ -117,27 +117,28 @@
     border: 1px solid #272727;
     width: 100%;
     justify-content: space-between;
-
 }
 
-.walletName {
+.walletDataType {
     display: flex;
     align-items: center;
+    width: 100px;
+    justify-content: center;
+    margin-left: 5px;
 }
 
-.walletModalIcon {
+.walletModalIcon, .walletModalIconClickable {
     font-size: 20px;
     margin: 2px;
     cursor: pointer;
 }
 
-.walletModalIcon:active {
+.walletModalIconClickable:active {
     transform: translateY(2px);
 }
 
 .walletButtonDiv {
     display: flex;
-
 }
 
 .walletDisconnectButton, 
