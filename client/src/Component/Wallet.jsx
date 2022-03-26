@@ -9,7 +9,7 @@ import { SiHiveBlockchain } from 'react-icons/si';
 import { FaUserCircle, FaEthereum } from 'react-icons/fa';
 import { AiFillCaretUp } from 'react-icons/ai';
 import { MdAccountBalanceWallet, MdOutlineAccountBalanceWallet } from 'react-icons/md';
-import { setIsAuth, setWallet, setWalletModal } from "../Redux/app/actions"
+import { setContractInstance, setIsAuth, setWallet, setWalletModal } from "../Redux/app/actions"
 import { ethers } from "ethers";
 import { abi } from "../helper";
 
@@ -35,6 +35,17 @@ const Wallet = () => {
 
         dispatch(setWallet(walletObj));
         dispatch(setIsAuth(true))
+
+        const ethersProvider = new ethers.providers.Web3Provider(window.ethereum, "any");
+        let mySigner = ethersProvider.getSigner();
+
+        let contractObj = new ethers.Contract(
+            process.env.REACT_APP_CONTRACT_ADDRESS,
+            abi,
+            mySigner
+        );
+
+        dispatch(setContractInstance(contractObj))
     }
 
     const disconnectWallet = () => {
@@ -43,36 +54,15 @@ const Wallet = () => {
         dispatch(setIsAuth(false))
     }
 
-    const handleWalletConnect = () => {
-        if (window.ethereum) {
+    const handleWalletConnect = async () => {
+        if (window.ethereum !== undefined && await metamask.isUnlocked() === false) {
+            alert("MetaMask is Locked!!")
+        } else if (window.ethereum !== undefined){
             dispatch(setWalletModal(!walletModal))
         } else {
             alert("install metamask extension!!")
         }
     }
-
-
-
-    // const check = async () => {
-    //     console.log("check called");
-    //     window.ethereum.request({ method: 'eth_requestAccounts' })
-    //     const ethersProvider = new ethers.providers.Web3Provider(window.ethereum, "any");
-    //     let mySigner = ethersProvider.getSigner();
-
-    //     let contractObj = new ethers.Contract(
-    //         process.env.REACT_APP_CONTRACT_ADDRESS,
-    //         abi,
-    //         mySigner
-    //     );
-
-    //     const name = await contractObj.getName()
-    //     console.log(name);
-
-    //     // await contractObj.setName("Akash")
-
-    //     const name2 = await contractObj.getName()
-    //     console.log(name2);
-    // }
 
     const metamask = {
         requestAccounts: async () => {
@@ -95,6 +85,10 @@ const Wallet = () => {
         isConnected: async () => {
             let connectStatus = window.ethereum.isConnected()
             return connectStatus;
+        },
+        isUnlocked: async () => {
+            let locked = window.ethereum._metamask.isUnlocked()
+            return locked
         }
     }
 
