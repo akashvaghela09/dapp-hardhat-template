@@ -2,12 +2,12 @@ import React, { useState, useEffect } from "react";
 import styles from "../Styles/Wallet.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
-import { BsWallet2 } from 'react-icons/bs';
 import { BiCopy } from 'react-icons/bi';
-import { IoWalletOutline } from 'react-icons/io5';
+import { IoWalletOutline, IoWallet } from 'react-icons/io5';
 import { GoLinkExternal } from 'react-icons/go';
 import { FaUserCircle } from 'react-icons/fa';
 import { AiFillCaretUp } from 'react-icons/ai';
+import { MdAccountBalanceWallet,  MdOutlineAccountBalanceWallet} from 'react-icons/md';
 import { setIsAuth, setWallet, setWalletModal } from "../Redux/app/actions"
 import { ethers } from "ethers";
 import { abi } from "../helper";
@@ -120,7 +120,7 @@ const Wallet = () => {
                     () => handleWalletConnect()
                 }
             >
-                <BsWallet2 className={styles.walletIcon} />
+                <MdAccountBalanceWallet className={isAuth === true ? styles.walletIconOrange : styles.walletIcon} />
                 <div className={isAuth === true ? styles.walletBadgeGreen : styles.walletBadge} />
             </label>
             {
