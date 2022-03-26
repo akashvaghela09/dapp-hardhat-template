@@ -6,16 +6,28 @@ import { abi } from './helper';
 import { AllRoutes } from './Routes/AllRoutes';
 import { useDispatch, useSelector } from 'react-redux';
 import { Header } from './Component/Header';
-
+import { Spinner } from "./Component/Spinner";
+import { Error } from './Component/Error';
 
 function App() {
   const dispatch = useDispatch();
 
+  const {
+    isError,
+    isLoading
+} = useSelector(state => state.app)
 
   return (
     <div className="App">
-      {/* <Header /> */}
+      
       <AllRoutes />
+      
+      {
+        isLoading === true && <Spinner />
+      }
+      {
+        isError === true && <Error />
+      }
     </div>
   );
 }
